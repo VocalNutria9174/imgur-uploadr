@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <!-- Welcome DevTools User! This page uses Eruda [liriliri/eruda], and stats.js [mrdoob/stats.js]! -->
+    <!-- Eruda is a console for mobile for people who don't have access to the Inspect tool. Stats.js is, well... Stats! (shows fps, mb-memory, etc.) -->
+    <!-- Well, thanks for reading this (if someone ever does)! Enjoy the tools, to see how stuff works! -->
+    <!-- (If you have any issues/questions, please let me know! https://github.com/VocalNutria9174/imgur-uploadr/issues) -->
+
+<head>
+    <!-- made fully made by VocalNutria9174. this took forever to make... =] -->
+    <!-- https://github.com/VocalNutria9174/imgur-uploadr/ -->
+    <!-- https://vocalnutria9174.github.io/imgur-uploadr/  -->
+    <meta charset="UTF-8">
+    <link rel="icon" href="img/imgur-icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imgur Uploadr - dev1.1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <h1><img src="img/imgur-icon.png" height="25.5"> Welcome to Imgur Uploadr!</h1></img>
+</head>
+<body>
+    <img src="img/upload.png" id="img" style="border-width:2.4px;border-style:solid;padding:5px;color:rgb(92, 255, 47)" alt="Your Image That You Uploaded (or its the upload icon thing)." height="188px">
+    <br><br>
+    <input type="file" id="file" accept="image/*" style="border-width:1.8px;border-style:solid;padding:5px;color:rgb(92, 255, 47)">
+    <br>
+    <br>
+    <p>[The accepted file types are: .png, .jpg, and .gif.]</p>
+    <br>
+    <strong>
+        <input readonly type="text" value="Your Link Will Appear Here!" id="url"></input>
+        <button onclick="copyLink()" id="copybtn">Upload an Image First!</button>
+    </strong>
+<br><br>
+
+    <p>powered by the imgur api<br>=)</p>
+    
+    <i><p>[issues? report them <a href="https://github.com/VocalNutria9174/imgur-uploadr/issues">here</a>]<br>thanks.</i>
+    <br><br>
+    <code><a href="app">$ load main_app.exe</a></code></p>
+
+<!-- developer tools code starts here -->
+<script src="js/stats.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/2.5.0/eruda.min.js" integrity="sha512-0y0y2UOZjmA4aeGoU6yB3f7838n0mgVcKu3IQrkf/xMtjHaGrpSnp8HVKiHrGBL540Eke/KE98XKYyfIzSMM4A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>eruda.init();</script>
+<script>
+var stats = new Stats();
+stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild( stats.dom );
+
+function animate() {
+
+	stats.begin();
+
+	// monitored code goes here
+
+	stats.end();
+
+	requestAnimationFrame( animate );
+
+}
+
+requestAnimationFrame( animate );
+</script>
+<!-- developer tools code ends here -->
+
+    <script>
+      // copy button code stuff
+        function copyLink() {
+            copyToClip();
+            setTimeout(() => {  btn.innerText = 'Copy URL!'; }, 1300);
+        }
+
+        const delay = (delayInms) => {
+         return new Promise(resolve => setTimeout(resolve, delayInms));
+        }
+        
+        function copyToClip() {
+          // Get the text field
+          var copyText = document.getElementById("url");
+        
+          // Select the text field
+          copyText.select();
+          copyText.setSelectionRange(0, 99999); // For mobile devices
+        
+          // Copy the text inside the text field
+          navigator.clipboard.writeText(copyText.value);
+          
+          btn.innerText = 'Copied!';
+        }
+        var btn = document.getElementById("copybtn");
+
+        btn.disabled = true
+        ulr.disabled = true
+
+
+      // uploader api code stuff
+        const file = document.getElementById("file")
+        const img = document.getElementById("img")
+        const url = document.getElementById("url")
+        file.addEventListener("change", ev => {
+            const formdata = new FormData()
+            formdata.append("image", ev.target.files[0])
+            fetch("https://api.imgur.com/3/image/", {
+                method: "post",
+                headers: {
+                  // The text after the "Client-ID" is the API key needed to upload the images!
+                    Authorization: "Client-ID 8a444a702067deb"
+                },
+                body: formdata
+            }).then(data => data.json()).then(data => {
+                img.src = data.data.link
+                url.value = data.data.link
+                url.disabled = false;
+                btn.disabled = false;
+                btn.innerText = 'Copy URL!';
+            })
+        })
+</script>
+<style>
+    body {
+        background-color: #608c8c;
+        color:aliceblue;
+    }
+
+    h1 {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    p {
+        font-family: 'Poppins', sans-serif;
+    }
+    
+    a {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+</body>
+</html>
